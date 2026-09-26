@@ -1,149 +1,117 @@
-# 🤖 Agente Financeiro Inteligente com IA Generativa
+# Caju
 
-## Contexto
+Caju é um agente financeiro pessoal criado para ajudar o usuário a entender melhor seus gastos, controlar receitas e despesas, acompanhar metas e pensar de forma mais consciente sobre sua vida financeira.
 
-Os assistentes virtuais no setor financeiro estão evoluindo de simples chatbots reativos para **agentes inteligentes e proativos**. Neste desafio, você vai idealizar e prototipar um agente financeiro que utiliza IA Generativa para:
+O projeto combina duas camadas:
 
-- **Antecipar necessidades** ao invés de apenas responder perguntas
-- **Personalizar** sugestões com base no contexto de cada cliente
-- **Cocriar soluções** financeiras de forma consultiva
-- **Garantir segurança** e confiabilidade nas respostas (anti-alucinação)
-
-> [!TIP]
-> Na pasta [`examples/`](./examples/) você encontra referências de implementação para cada etapa deste desafio.
+1. a lógica do agente, com regras, persona, guardrails e habilidades;
+2. a aplicação em Streamlit, que transforma esse agente em um chatbot funcional para uso direto.
 
 ---
 
-## O Que Você Deve Entregar
+## Como o agente funciona
 
-### 1. Documentação do Agente
+O agente usa a base de conhecimento do projeto para responder de forma contextualizada e segura. Os dados vêm de arquivos em [data](data), como:
 
-Defina **o que** seu agente faz e **como** ele funciona:
+- [data/perfil_investidor.json](data/perfil_investidor.json): perfil do cliente, renda, despesas, metas, patrimônio e reserva;
+- [data/transacoes.csv](data/transacoes.csv): entradas e saídas financeiras;
+- [data/historico_atendimento.csv](data/historico_atendimento.csv): histórico de conversa e contexto anterior;
+- [data/produtos_financeiros.json](data/produtos_financeiros.json): conceitos gerais para apoio educativo.
 
-- **Caso de Uso:** Qual problema financeiro ele resolve? (ex: consultoria de investimentos, planejamento de metas, alertas de gastos)
-- **Persona e Tom de Voz:** Como o agente se comporta e se comunica?
-- **Arquitetura:** Fluxo de dados e integração com a base de conhecimento
-- **Segurança:** Como evitar alucinações e garantir respostas confiáveis?
+A regra principal do agente é simples: ele só deve responder com base em dados reais disponíveis no projeto ou na conversa atual. Se faltarem informações, ele informa a limitação em vez de inventar respostas.
 
-📄 **Template:** [`docs/01-documentacao-agente.md`](./docs/01-documentacao-agente.md)
+A estrutura do agente está em:
 
----
-
-### 2. Base de Conhecimento
-
-Utilize os **dados mockados** disponíveis na pasta [`data/`](./data/) para alimentar seu agente:
-
-| Arquivo | Formato | Descrição |
-|---------|---------|-----------|
-| `transacoes.csv` | CSV | Histórico de transações do cliente |
-| `historico_atendimento.csv` | CSV | Histórico de atendimentos anteriores |
-| `perfil_investidor.json` | JSON | Perfil e preferências do cliente |
-| `produtos_financeiros.json` | JSON | Produtos e serviços disponíveis |
-
-Você pode adaptar ou expandir esses dados conforme seu caso de uso.
-
-📄 **Template:** [`docs/02-base-conhecimento.md`](./docs/02-base-conhecimento.md)
+- [AGENTS.md](AGENTS.md): definição de papel, regras, guardrails e escopo;
+- [agent/persona.md](agent/persona.md): personalidade do agente;
+- [agent/knownledge](agent/knownledge): base de conhecimento interna do agente;
+- [skills](skills): habilidades do agente, como análise de gastos, finanças pessoais e acompanhamento de metas.
 
 ---
 
-### 3. Prompts do Agente
+## Como o programa funciona
 
-Documente os prompts que definem o comportamento do seu agente:
+A aplicação principal fica em [src/app.py](src/app.py). Ela:
 
-- **System Prompt:** Instruções gerais de comportamento e restrições
-- **Exemplos de Interação:** Cenários de uso com entrada e saída esperada
-- **Tratamento de Edge Cases:** Como o agente lida com situações limite
+- carrega os dados do cliente e do histórico;
+- monta um contexto estruturado para o modelo;
+- envia esse contexto para o modelo local do Ollama;
+- retorna a resposta em uma interface interativa em Streamlit.
 
-📄 **Template:** [`docs/03-prompts.md`](./docs/03-prompts.md)
+O fluxo principal é:
 
----
+1. o usuário escreve uma pergunta sobre finanças;
+2. a aplicação reúne os dados do perfil, transações e históricos;
+3. o prompt do agente combina instruções de comportamento com o contexto do cliente;
+4. o modelo local gera uma resposta;
+5. a resposta é exibida na interface do chat.
 
-### 4. Aplicação Funcional
-
-Desenvolva um **protótipo funcional** do seu agente:
-
-- Chatbot interativo (sugestão: Streamlit, Gradio ou similar)
-- Integração com LLM (via API ou modelo local)
-- Conexão com a base de conhecimento
-
-📁 **Pasta:** [`src/`](./src/)
+A parte do programa foi pensada para funcionar com modelo local, usando o Ollama na porta padrão.
 
 ---
 
-### 5. Avaliação e Métricas
+## Como rodar localmente
 
-Descreva como você avalia a qualidade do seu agente:
+Antes de iniciar a aplicação, o modelo local precisa estar funcionando.
 
-**Métricas Sugeridas:**
-- Precisão/assertividade das respostas
-- Taxa de respostas seguras (sem alucinações)
-- Coerência com o perfil do cliente
+### 1. Instalar o Ollama
 
-📄 **Template:** [`docs/04-metricas.md`](./docs/04-metricas.md)
+Baixe e instale o Ollama no computador.
 
----
+### 2. Baixar o modelo
 
-### 6. Pitch
-
-Grave um **pitch de 3 minutos** (estilo elevador) apresentando:
-
-- Qual problema seu agente resolve?
-- Como ele funciona na prática?
-- Por que essa solução é inovadora?
-
-📄 **Template:** [`docs/05-pitch.md`](./docs/05-pitch.md)
-
----
-
-## Ferramentas Sugeridas
-
-Todas as ferramentas abaixo possuem versões gratuitas:
-
-| Categoria | Ferramentas |
-|-----------|-------------|
-| **LLMs** | [ChatGPT](https://chat.openai.com/), [Copilot](https://copilot.microsoft.com/), [Gemini](https://gemini.google.com/), [Claude](https://claude.ai/), [Ollama](https://ollama.ai/) |
-| **Desenvolvimento** | [Streamlit](https://streamlit.io/), [Gradio](https://www.gradio.app/), [Google Colab](https://colab.research.google.com/) |
-| **Orquestração** | [LangChain](https://www.langchain.com/), [LangFlow](https://www.langflow.org/), [CrewAI](https://www.crewai.com/) |
-| **Diagramas** | [Mermaid](https://mermaid.js.org/), [Draw.io](https://app.diagrams.net/), [Excalidraw](https://excalidraw.com/) |
-
----
-
-## Estrutura do Repositório
-
+```bash
+ollama pull gpt-oss
 ```
-📁 lab-agente-financeiro/
-│
-├── 📄 README.md
-│
-├── 📁 data/                          # Dados mockados para o agente
-│   ├── historico_atendimento.csv     # Histórico de atendimentos (CSV)
-│   ├── perfil_investidor.json        # Perfil do cliente (JSON)
-│   ├── produtos_financeiros.json     # Produtos disponíveis (JSON)
-│   └── transacoes.csv                # Histórico de transações (CSV)
-│
-├── 📁 docs/                          # Documentação do projeto
-│   ├── 01-documentacao-agente.md     # Caso de uso e arquitetura
-│   ├── 02-base-conhecimento.md       # Estratégia de dados
-│   ├── 03-prompts.md                 # Engenharia de prompts
-│   ├── 04-metricas.md                # Avaliação e métricas
-│   └── 05-pitch.md                   # Roteiro do pitch
-│
-├── 📁 src/                           # Código da aplicação
-│   └── app.py                        # (exemplo de estrutura)
-│
-├── 📁 assets/                        # Imagens e diagramas
-│   └── ...
-│
-└── 📁 examples/                      # Referências e exemplos
-    └── README.md
+
+### 3. Iniciar o servidor local
+
+```bash
+ollama serve
+```
+
+### 4. Rodar a aplicação
+
+A partir da raiz do projeto:
+
+```bash
+python -m streamlit run .\src\app.py
+```
+
+A aplicação está configurada para acessar o endpoint local do Ollama em http://localhost:11434/api/generate, usando o modelo gpt-oss.
+
+---
+
+## Estrutura do projeto
+
+```text
+repo/
+├── AGENTS.md
+├── README.md
+├── data/
+│   ├── historico_atendimento.csv
+│   ├── perfil_investidor.json
+│   ├── produtos_financeiros.json
+│   └── transacoes.csv
+├── agent/
+│   ├── knownledge/
+│   └── persona.md
+├── skills/
+│   ├── 01-financas-pessoais.md
+│   ├── 02-analise-de-gastos.md
+│   └── 03-metas-financeiras.md
+├── src/
+│   ├── app.py
+│   └── README.md
+├── assets/
+├── examples/
+└── .git/
 ```
 
 ---
 
-## Dicas Finais
+## Objetivo final
 
-1. **Comece pelo prompt:** Um bom system prompt é a base de um agente eficaz
-2. **Use os dados mockados:** Eles garantem consistência e evitam problemas com dados sensíveis
-3. **Foque na segurança:** No setor financeiro, evitar alucinações é crítico
-4. **Teste cenários reais:** Simule perguntas que um cliente faria de verdade
-5. **Seja direto no pitch:** 3 minutos passam rápido, vá ao ponto
+Este projeto une educação financeira, IA generativa e prototipagem de interface para criar um assistente útil, acessível e seguro, com foco em organização financeira pessoal e acompanhamento de objetivos do cliente.
+
+A intenção não é recomendar investimentos específicos nem substituir profissionais, mas sim dar clareza, orientação e suporte para a tomada de decisão com responsabilidade.
