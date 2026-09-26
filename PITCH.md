@@ -10,4 +10,4 @@ Minha solução transforma dados financeiros em orientação útil, ajudando a p
 
 Veja a apresentação no YouTube:
 
-https://www.youtube.com/watch?v=dQw4w9WgXcQ
+https://www.youtube.com/watch?v=3FTTGkVKE1Q
