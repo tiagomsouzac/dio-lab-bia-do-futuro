@@ -49,12 +49,20 @@ Informal, técnico
 
 ```mermaid
 flowchart TD
-    A[Cliente] -->|Mensagem| B[Interface]
-    B --> C[LLM]
-    C --> D[Base de Conhecimento]
-    D --> C
-    C --> E[Validação]
-    E --> F[Resposta]
+    A[USUÁRIO] --> B[INTERFACE<br/>CHATBOT]
+    B --> C[LLM<br/>CAJU]
+
+    C --> D[PERFIL FINANCEIRO<br/>JSON]
+    C --> E[PRODUTOS EDUCACIONAIS<br/>JSON]
+    C --> F[REGRAS DO AGENTE]
+
+    D --> G[VALIDAÇÃO]
+    E --> G
+    F --> G
+
+    G --> H[RESPOSTA<br/>CAJU]
+
+    G -.-> I[Não inventar<br/>dados do usuário]
 ```
 
 ### Componentes
@@ -72,10 +80,15 @@ flowchart TD
 
 ### Estratégias Adotadas
 
-- [ ] O Agente só responde de acordo com que foi treinado
-- [ ] O Agente não recomenda investimentos
-- [ ] O Agente sempre vai dizer quando não sabe de algo
-- [ ] O Agente sempre recomenda controlar e nunca mandar
+- [x] O agente utiliza os dados disponíveis do usuário como fonte para análises financeiras.
+- [x] O agente não inventa informações financeiras que não estejam disponíveis.
+- [x] O agente informa quando não possui dados suficientes para responder.
+- [x] O agente diferencia dados reais do usuário de estimativas.
+- [x] O agente não recomenda investimentos específicos.
+- [x] O agente não determina quanto o usuário deve gastar.
+- [x] O agente apresenta informações para auxiliar o usuário na tomada de decisão.
+- [x] O agente não recomenda cortar gastos essenciais sem contexto.
+- [x] O agente não acessa contas bancárias ou realiza transações.
 
 ### Limitações Declaradas
 > O que o agente NÃO faz?
